@@ -1,0 +1,53 @@
+﻿@page
+@using food.Utility
+@model food.Pages.Customer.Home.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+@foreach (var category in Model.CategoryList)
+{
+
+    @if (Model.MenuItemList.Where(c => c.CategoryId == category.Id).Count() > 0)
+    {
+        <div class="row container pb-3 backgroundWhite">
+            <div class="col-12">
+                <div class="row">
+                    <h2 class="text-success pl-1"> <b>@category.Name</b> </h2>
+                    
+                    <div class="col-12">
+                        <div class="row my-3">
+                            @foreach (var menuItem in Model.MenuItemList.Where(c => c.CategoryId == category.Id))
+                            {
+                                <div class="col-lg-3 col-xl-3 col-md-6 pb-4">
+                                    <div class="card" style="border: 2px solid #008cda; border-radius: 5px">
+                                        <h3 class="card-title text-primary text-center"> <b>@menuItem.Name</b> </h3>
+
+                                        <div class="d-flex justify-content-between form-control" style="border:0px;">
+                                            <div class="col-5 badge badge-warning" >
+                                                @menuItem.Category.Name
+                                            </div>
+                                            <div class="col-7 text-right h4 " style="color: maroon;"><b>@menuItem.Price</b>₺</div>
+                                        </div>
+                                        <img src="@menuItem.Image" class="card-img-top p-2 rounded" style="height: 175px;" />
+                                        @if (User.IsInRole(SD.CustomerRole) ||User.IsInRole(SD.ManagerRole)||User.IsInRole(SD.FrontDeskRole)||User.IsInRole(SD.KitchenRole))
+                                        {
+                                            <a asp-page="Details" class="btn btn-primary" style="border-radius: 2px;" asp-route-id="@menuItem.Id">Details</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="/Identity/Account/Login" class="btn btn-primary" style="border-radius: 2px;">Login For Details</a>
+
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+}
+
